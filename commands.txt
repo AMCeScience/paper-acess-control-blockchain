@@ -1,0 +1,70 @@
+#### Commands for parity
+parity --chain=ropsten --geth --force-ui --jsonrpc-interface all --jsonrpc-hosts 127.0.0.1 --jsonrpc-cors http://127.0.0.1:8080 --jsonrpc-apis web3,eth,rpc
+
+parity --chain dev --jsonrpc-apis "eth","net","private","parity","personal" --jsonrpc-cors "http://remix.ethereum.org" 
+
+parity --chain chain.json --geth --force-ui --jsonrpc-interface all --jsonrpc-hosts 127.0.0.1 --jsonrpc-cors http://127.0.0.1:8080 --jsonrpc-apis web3,eth,rpc
+
+parity --config dev-insecure --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
+
+
+
+###############
+Contract deployment transaction
+
+	status	true Transaction mined and execution succeed
+ 	transaction hash	0x50083089fad24c4657370f41df7599be050f362b35d86fe32c95e7a0b07e0d55 Copy value to clipboard
+ 	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+ 	to	ABAC_Access_Control.(constructor) Copy value to clipboard
+ 	gas	1834605 gas Copy value to clipboard
+ 	transaction cost	1834605 gas Copy value to clipboard
+ 	hash	0x50083089fad24c4657370f41df7599be050f362b35d86fe32c95e7a0b07e0d55 Copy value to clipboard
+ 	input	0x608...70033 Copy value to clipboard
+ 	decoded input	{} Copy value to clipboard
+ 	decoded output	 - Copy value to clipboard
+ 	logs	[] Copy value to clipboard Copy value to clipboard
+ 	value	0 wei 
+
+ Set smart contract address example
+
+	 status	true Transaction mined and execution succeed
+	 transaction hash	0x0992b2394aec486be342b02314d7837a092eb76444e319834823ad974fa90b27 Copy value to clipboard
+	 from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	 to	ABAC_Access_Control.setCloudAccesses(address) 0x3DD0864668C36D27B53a98137764c99F9FD5B7B2 Copy value to clipboard
+	 gas	43490 gas Copy value to clipboard
+	 transaction cost	43490 gas Copy value to clipboard
+	 hash	0x0992b2394aec486be342b02314d7837a092eb76444e319834823ad974fa90b27 Copy value to clipboard
+	 input	0xec4...bbd65 Copy value to clipboard
+	 decoded input	{ "address _address": "0xcd9a70C13C88863ECE51B302a77D2EB98fBBBD65" } Copy value to clipboard
+	 decoded output	 - Copy value to clipboard
+	 logs	[] Copy value to clipboard Copy value to clipboard
+	 value	0 wei 
+
+Creating policy emiting event
+	status	true Transaction mined and execution succeed
+	transaction hash	0xe8190773ea840f2096e60ad3537e28f8d91d89ae890817ab055c9f1e7ba62386 Copy value to clipboard
+	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	to	ABAC_Policies.createPolicy(string,bool[]) 0x385b2E03433C816DeF636278Fb600ecd056B0e8d Copy value to clipboard
+	gas	137202 gas Copy value to clipboard
+	transaction cost	137202 gas Copy value to clipboard
+	hash	0xe8190773ea840f2096e60ad3537e28f8d91d89ae890817ab055c9f1e7ba62386 Copy value to clipboard
+	input	0x1ef...00001 Copy value to clipboard
+	decoded input	{ "string _access_type": "read", "bool[] _attrs": [ true, true, true, true, true, true, true, true ] } Copy value to clipboard
+	decoded output	 - Copy value to clipboard
+	logs	[ { "from": "0x385b2E03433C816DeF636278Fb600ecd056B0e8d", "topic": "0x18a395617e938ed81ce6a92af82a2ff7e83611c5d1b3fa5af237d569fc2f2838", "event": "createdPolicy", "args": { "0": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "1": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ], "hash": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "policy": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ] } } ] Copy value to clipboard Copy value to clipboard
+	value	0 wei 
+
+Quering policy emiting event
+
+	status	true Transaction mined and execution succeed
+	transaction hash	0x71c531672b93b344e8db9863f16615eea6f74797dfe4c7810b686745c42529d5 Copy value to clipboard
+	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	to	ABAC_Policies.queryPolicy(string) 0x385b2E03433C816DeF636278Fb600ecd056B0e8d Copy value to clipboard
+	gas	39290 gas Copy value to clipboard
+	transaction cost	39290 gas Copy value to clipboard
+	hash	0x71c531672b93b344e8db9863f16615eea6f74797dfe4c7810b686745c42529d5 Copy value to clipboard
+	input	0x591...00000 Copy value to clipboard
+	decoded input	{ "string _access_type": "read" } Copy value to clipboard
+	decoded output	 - Copy value to clipboard
+	logs	[ { "from": "0x385b2E03433C816DeF636278Fb600ecd056B0e8d", "topic": "0x71b29b49fa76d36a9c92b8a864cbf6dd9c9c57704d110f6de4fd0ac3c7985e3e", "event": "queriedPolicy", "args": { "0": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "1": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ], "hash": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "policy": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ] } } ] Copy value to clipboard Copy value to clipboard
+	value	0 wei 

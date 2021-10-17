@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  parity:
+    container_name: custom-parity
+    image: parity/parity
+    volumes: 
+      - ../src/chain.json:/home/parity/.local/share/io.parity.ethereum/chain.json
+      - ../src/config.toml:/home/parity/.local/share/io.parity.ethereum/config.toml
+    command: --config /home/parity/.local/share/io.parity.ethereum/config.toml
+    restart: always
+    ports:
+      - 8545:8545
+      - 8546:8546
+      - 30303:30303
+      - 30303:30303/udp
