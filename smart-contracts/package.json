@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "eth-crypto": "^2.1.0",
-    "web3": "^1.6.0",
-    "web3-eth-accounts": "^1.6.0"
-  }
-}
