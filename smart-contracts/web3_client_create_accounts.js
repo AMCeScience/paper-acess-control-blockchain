@@ -10,34 +10,39 @@ const pwd = "123";
 // Setup web3 client to localhost private network
 var web3 = new Web3('http://localhost:8545'); // your geth
 
-// const artifactsPath = `browser/contracts/artifacts/${contractName}.json` // Change this for different path
-let source = fs.readFileSync("ABAC_Ethereum_new.json");
-let contracts = JSON.parse(source)["contracts"];
-// ABI description as JSON structure
-let abi = JSON.parse(contracts.SampleContract.abi);
-// Create Contract proxy class
-let SampleContract = web3.eth.contract(abi);
 
+////////////// This section imports contracts and deploys to the network
 // ===================================================================== //
-////////////// This section creates a local account
+// const artifactsPath = `browser/contracts/artifacts/${contractName}.json` // Change this for different path
+// let source = fs.readFileSync("ABAC_Ethereum_new.json");
+// let contracts = JSON.parse(source)["contracts"];
+// // ABI description as JSON structure
+// let abi = JSON.parse(contracts.SampleContract.abi);
+// // Create Contract proxy class
+// let SampleContract = web3.eth.contract(abi);
+// ===================================================================== //
+
+
+////////////// This section creates a local account (for wallet only)
+// ===================================================================== //
 // var accounts = new Accounts('http://localhost:8545');
 // var account = web3.eth.accounts.create();
 // console.log(account);
 // ===================================================================== //
 
 
+////////////// This section creates the accounts on the nodes (actually creates on network)
 // ===================================================================== //
-////////////// This section creates the accounts on the nodes
 // acc = accounts.create();
 // var account = web3.eth.accounts.create();
-// for (let i = 0; i < 2; i++) {
-// 	var account = web3.eth.personal.newAccount("#123456!?");
-// 	console.log(account);
-// }
+for (let i = 0; i < 2; i++) {
+	var account = web3.eth.personal.newAccount("#123456!?");
+	console.log(account);
+}
 
 // List accounts
-// accounts = web3.eth.getAccounts();
-// accounts.then(e => console.log(e));
+accounts = web3.eth.getAccounts();
+accounts.then(e => console.log(e));
 // ===================================================================== //
 
 
@@ -66,13 +71,13 @@ let SampleContract = web3.eth.contract(abi);
 
 // ===================================================================== //
 /////////////////  This section signs a message ( attributes + public key)
-generateSignedAuthToken(32, public_key, '0xd19b92317E574aA1E8F67015F9B29d2752cAE900', pwd)
+// generateSignedAuthToken(32, public_key, '0xd19b92317E574aA1E8F67015F9B29d2752cAE900', pwd)
 // ===================================================================== //
 
 
-function generateSignedAuthToken(attributes, public_key, address, password){
-	const encoded = web3.eth.abi.encodeParameters(['uint8', 'string'],[attributes, public_key]);
-	const hash = web3.utils.sha3(encoded, {encoding: 'hex'});
+function generateSignedAuthToken(attributes, public_key, address, password) {
+	const encoded = web3.eth.abi.encodeParameters(['uint8', 'string'], [attributes, public_key]);
+	const hash = web3.utils.sha3(encoded, { encoding: 'hex' });
 	console.log("Generated hash = ", hash);
 	var signedMessage = web3.eth.personal.sign(hash, address, password).then(e => console.log("Signed hash =", e));
 	var recoveredAddress = web3.eth.personal.ecRecover(hash, "0xc8e3109431ad4485c707ed75c8f86e355ab9d81ec8497626deaddc86aefd8d2774587b1763dce8b02f7b676209dcd226b6f5106f2c92ff4d8c807379acb686f01b").then(e => console.log("Recovered access = ", e));
@@ -80,10 +85,10 @@ function generateSignedAuthToken(attributes, public_key, address, password){
 
 
 function unlockAccounts(accounts, unlock_duration_sec) {
-    if (typeof(unlock_duration_sec)==='undefined') unlock_duration_sec = "0x00000000000000000000000000012c";
-    
-    for (let i = 0; i < accounts.length; i++) {
-		var account = web3.eth.personal.unlockAccount(accounts[i], pwd, null);		
+	if (typeof (unlock_duration_sec) === 'undefined') unlock_duration_sec = "0x00000000000000000000000000012c";
+
+	for (let i = 0; i < accounts.length; i++) {
+		var account = web3.eth.personal.unlockAccount(accounts[i], pwd, null);
 	}
-    
+
 }

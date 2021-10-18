@@ -1,0 +1,356 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_key",
+						"type": "string"
+					}
+				],
+				"name": "invalidHashComparison",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "_key",
+						"type": "string"
+					}
+				],
+				"name": "invalidSignature",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "generateCloudToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_access_type",
+						"type": "string"
+					}
+				],
+				"name": "loadPolicy",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "uint256",
+								"name": "uuid",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "access_type",
+								"type": "string"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr1",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr2",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr3",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr4",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr5",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr6",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr7",
+								"type": "bool"
+							},
+							{
+								"internalType": "bool",
+								"name": "attr8",
+								"type": "bool"
+							}
+						],
+						"internalType": "struct ABAC_Policies.Policy",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_signer_address",
+						"type": "address"
+					}
+				],
+				"name": "orgSignValidated",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_access_type",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_public_key",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_patient_uuid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_actions",
+						"type": "string[]"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "_attributes",
+						"type": "uint8[]"
+					}
+				],
+				"name": "requestAccess",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setABACPoliciesAddr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setAddressPubKeyMappingAddr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setCloudAccesses",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setEmergencyAttributesAddr",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_hashed_token",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "_attr",
+						"type": "uint8[]"
+					},
+					{
+						"internalType": "string",
+						"name": "_pubKey",
+						"type": "string"
+					}
+				],
+				"name": "signatureAndProfessionalVerification",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_access_type",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_patient_uuid",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string[]",
+						"name": "_actions",
+						"type": "string[]"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_hashed_token",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_signed_token",
+						"type": "bytes"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "attributes",
+						"type": "uint8[]"
+					}
+				],
+				"name": "startSmartContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "a",
+						"type": "address"
+					}
+				],
+				"name": "toBytes",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"smart-contracts/ABAC_Ethereum_new.sol": "ABAC_Access_Control"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"smart-contracts/ABAC_Ethereum_new.sol": {
+			"keccak256": "0xf7754e19ca16d9e43a00dd084dd3ca87c1c059aee79353c83fbfe819925db437",
+			"urls": [
+				"bzz-raw://89df415f5a0d993734471824caa654d01e85c7dd70e15784a708984b64fd5635",
+				"dweb:/ipfs/QmdpWP5R4thwYoBusqt21Pu5rcrLbRYgchM2PLxZ6yVcrG"
+			]
+		}
+	},
+	"version": 1
+}
