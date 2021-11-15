@@ -1,0 +1,29 @@
+[parity]
+chain = "chain-spec.json"
+base_path = "/tmp/parity1"
+[network]
+id = 0x2323
+reserved_only = true
+reserved_peers = "myPrivateNetwork.txt"
+port = 30301
+[rpc]
+port = 8541
+apis = ["web3", "eth", "net", "personal", "parity", "parity_set", "traces", "rpc", "parity_accounts"]
+cors = ["https://remix-alpha.ethereum.org"]
+# [ui]
+# port = 8181
+[websockets]
+port = 8451
+[misc]
+log_file = "/tmp/parity1.log"
+# logging = "debug"
+[ipc]
+disable = true
+[account]
+password = ["node1.pwd"]
+[mining]
+engine_signer = "0x5892c9df10ec4ed63159659be763cf62f34f86a0"
+# force_sealing = true
+reseal_on_txs = "none"
+# refuse_service_transactions = false
+usd_per_tx = "0"

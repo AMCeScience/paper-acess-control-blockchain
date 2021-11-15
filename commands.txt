@@ -10,12 +10,15 @@ parity --config dev-insecure --jsonrpc-apis=personal,net,eth,rpc,private,parity,
 curl --data '{"method":"personal_unlockAccount","params":["0x8c276fC4761cfE5fbDa3b9cef3d1D3D6489163Ab","#123456!?","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
 {"jsonrpc":"2.0","result":false,"id":1}
 
-curl --data '{"method":"personal_unlockAccount","params":["0x00a329c0648769A73afAc7F9381E08FB43dBEA72","#123456!?","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+curl --data '{"method":"personal_unlockAccount","params":["0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e","user","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8540
 {"jsonrpc":"2.0","result":false,"id":1}
 
 parity --chain chain-spec.json --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
 
-curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://7d46bb49262c60b981a13cb8f62bcd5f2c10171945914b4d07bfa6b5c19988d8a13891a0e7026fdd5d59bf28d700ace8873e10ecf0fbe3fb786185ecbbe54e14@192.168.0.100:30300"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8541
+parity  --chain chain-spec.json -d /tmp/parity0 --port 30300 --jsonrpc-port 8540 --ws-port 8450 --jsonrpc-apis web3,eth,net,personal,parity,parity_set,traces,rpc,parity_accounts
+
+curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://5ec2f011769b235e4ed360fafb1334e2ac3a34e6927cadc7e2d840a2201f8ee0b13c78d1856b19224e72b6c019a868218d8865ced87550aba94d977501a9e3d7@192.168.0.102:30301"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+
 
 
 ###############
