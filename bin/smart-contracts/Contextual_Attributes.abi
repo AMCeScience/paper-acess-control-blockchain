@@ -1,0 +1,1 @@
+[{"inputs":[],"name":"addExtraInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"changeExtraInfo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_emergency_uuid","type":"uint256"}],"name":"deleteExtraInfo","outputs":[],"stateMutability":"nonpayable","type":"function"}]

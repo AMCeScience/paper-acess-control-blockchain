@@ -8,7 +8,7 @@ const pwd = "123";
 // var accounts = new Accounts('ws://localhost:8546');
 
 // Setup web3 client to localhost private network
-var web3 = new Web3('http://localhost:8545'); // your geth
+var web3 = new Web3('http://localhost:8541'); // your geth
 
 
 ////////////// This section imports contracts and deploys to the network
@@ -34,7 +34,7 @@ var web3 = new Web3('http://localhost:8545'); // your geth
 ////////////// This section creates the accounts on the nodes (actually creates on network)
 // ===================================================================== //
 // acc = accounts.create();
-// var account = web3.eth.accounts.create();
+var account = web3.eth.accounts.create();
 for (let i = 0; i < 2; i++) {
 	var account = web3.eth.personal.newAccount("#123456!?");
 	console.log(account);

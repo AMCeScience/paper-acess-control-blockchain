@@ -7,6 +7,15 @@ parity --chain chain.json --geth --force-ui --jsonrpc-interface all --jsonrpc-ho
 
 parity --config dev-insecure --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
 
+curl --data '{"method":"personal_unlockAccount","params":["0x8c276fC4761cfE5fbDa3b9cef3d1D3D6489163Ab","#123456!?","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+{"jsonrpc":"2.0","result":false,"id":1}
+
+curl --data '{"method":"personal_unlockAccount","params":["0x00a329c0648769A73afAc7F9381E08FB43dBEA72","#123456!?","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+{"jsonrpc":"2.0","result":false,"id":1}
+
+parity --chain chain-spec.json --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
+
+curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://7d46bb49262c60b981a13cb8f62bcd5f2c10171945914b4d07bfa6b5c19988d8a13891a0e7026fdd5d59bf28d700ace8873e10ecf0fbe3fb786185ecbbe54e14@192.168.0.100:30300"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8541
 
 
 ###############
@@ -68,3 +77,12 @@ Quering policy emiting event
 	decoded output	 - Copy value to clipboard
 	logs	[ { "from": "0x385b2E03433C816DeF636278Fb600ecd056B0e8d", "topic": "0x71b29b49fa76d36a9c92b8a864cbf6dd9c9c57704d110f6de4fd0ac3c7985e3e", "event": "queriedPolicy", "args": { "0": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "1": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ], "hash": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "policy": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ] } } ] Copy value to clipboard Copy value to clipboard
 	value	0 wei 
+
+
+
+	####
+	curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://c7834ee763344599984097a4f9b7647a5f9e1a19ad7262e5d5797bf379c8449919a317ff77afff1422e2a66770c511e6dbfbc3c4708f11a43afb5e3ed1713c98@192.168.0.100:30301"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8542
+
+	curl --data '{"jsonrpc":"2.0","method":"personal_sendTransaction","params":[{"from":"0x3819700da297df10776acf566a8eaf6ecf8273f8","to":"0x00e4373ff72ca14d2098ca1854
+	
+	user account - 0x004ec07d2329997267ec62b4166639513386f32e
