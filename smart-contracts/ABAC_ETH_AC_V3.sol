@@ -35,6 +35,8 @@ contract Policies {
     event createdPolicy(uint256 hash, Policy policy); // Event
     event changedPolicy(uint256 hash, Policy policy); // Event
     event deletedPolicy(uint256 hash, Policy policy); // Event
+    event failedEvent(string description);
+
 
     // Creates a hash based on _access_type to create the policy
     function hashPolicy(string memory _access_type)
@@ -50,23 +52,25 @@ contract Policies {
     }
 
     // Create a new policy
-    function createPolicy(string memory _access_type, bool[] memory _attrs)public{
+    // function createPolicy(string memory _access_type, bool[] memory _attrs)public{
+    function createPolicy(string memory _access_type)public{
         require(msg.sender == owner);
         uint256 hash = hashPolicy(_access_type);
         if (getPolicy(hash)) {
+            emit failedEvent("Policy already exists");
             return;
         }
         Policies[hash] = Policy(
             hash,
             _access_type,
-            _attrs[0],
-            _attrs[1],
-            _attrs[2],
-            _attrs[3],
-            _attrs[4],
-            _attrs[5],
-            _attrs[6],
-            _attrs[7]
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
         );
         emit createdPolicy(hash, Policies[hash]);
         return;
@@ -327,6 +331,7 @@ contract Attributes {
         bool attr9;
         bool attr10;
     }
+
 
     // Maps address to pubkey
     mapping(address => mapping(address => string)) internal address_pubk;
