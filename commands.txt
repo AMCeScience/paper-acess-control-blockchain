@@ -7,7 +7,7 @@ parity --chain chain.json --geth --force-ui --jsonrpc-interface all --jsonrpc-ho
 
 parity --config dev-insecure --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
 
-curl --data '{"method":"personal_unlockAccount","params":["0x8c276fC4761cfE5fbDa3b9cef3d1D3D6489163Ab","#123456!?","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+curl --data '{"method":"personal_unlockAccount","params":["0x00a329c0648769A73afAc7F9381E08FB43dBEA72","","1"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
 {"jsonrpc":"2.0","result":false,"id":1}
 
 curl --data '{"method":"personal_unlockAccount","params":["0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e","user","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8540

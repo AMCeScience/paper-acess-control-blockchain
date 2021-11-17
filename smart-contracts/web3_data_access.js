@@ -39,6 +39,7 @@ function evaluateRequest(){
         data_access_transactions["evaluateRequest"].push(hash)
     })
 }
+
 // ============================================================== //
 // ============================================================== //
 function grantAccess(){
@@ -47,6 +48,7 @@ function grantAccess(){
         data_access_transactions["grantAccess"].push(hash)
     })
 }
+
 // ============================================================== //
 // ============================================================== //
 function verifyAccess(){
@@ -55,6 +57,7 @@ function verifyAccess(){
         data_access_transactions["verifyAccess"].push(hash)
     })
 }
+
 // ============================================================== //
 // ============================================================== //
 function revokeAccess(){
@@ -63,6 +66,7 @@ function revokeAccess(){
         data_access_transactions["revokeAccess"].push(hash)
     })
 }
+
 // ============================================================== //
 // ============================================================== //
 function save_json(){
@@ -76,4 +80,5 @@ function save_json(){
         console.log("JSON file has been saved.");
     });
 }
+
 // ============================================================== //

@@ -19,6 +19,7 @@ var owner_account = '0x00a329c0648769A73afAc7F9381E08FB43dBEA72';
 main ();
 
 // ============================================================== //
+// ============================================================== //
 //// read contracts abi and byte codes
 async function main(){
     let policies_abi_source = fs.readFileSync("../bin/smart-contracts/Policies.abi");
@@ -48,7 +49,6 @@ async function main(){
 
 // ============================================================== //
 // ============================================================== //
-
 function createPolicy(){
     web3.eth.personal.unlockAccount(owner_account, password, null);
     PoliciesContract.methods.createPolicy("emergency").send({from: owner_account})
@@ -86,6 +86,7 @@ function save_json(){
         console.log("JSON file has been saved.");
     });
 }
+
 // ============================================================== //
 // ============================================================== //
 function sleep(ms) {
@@ -93,5 +94,6 @@ function sleep(ms) {
       resolve => setTimeout(resolve, ms)
     );
 }
+
 // ============================================================== //
 // ============================================================== //
