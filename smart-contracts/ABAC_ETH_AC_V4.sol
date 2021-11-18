@@ -17,8 +17,8 @@ contract Policies {
         uint8 policy;
         // uint8[] policies;
         // string encrypted_mask; // encrypted_mask = example: {0: "Call centre professional", 1: "Ambulance professional" etc ...}
-        // bool convetional_access;
-        // bool emergency_access;
+        bool conventional_access;
+        bool emergency_access;
     }
 
     // Policies
@@ -51,7 +51,7 @@ contract Policies {
     }
 
     // Create a new policy with the number/array-of-attributes
-    function createPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id, uint8 _policy)public{
+    function createPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id, uint8 _policy, bool _conventional_access, bool _emergency_access)public{
     // function createPolicy(string memory _context_expression)public{
         require(msg.sender == owner);
         uint256 hash = hashPolicy(_context_expression, _actions, _resource_id);
@@ -62,7 +62,10 @@ contract Policies {
         _policies[hash] = Policy(
             hash,
             _context_expression,
-            _policy
+            _policy,
+            _conventional_access,
+            _emergency_access
+
         );
 
         emit createdPolicy(hash, _policies[hash]);
@@ -207,7 +210,7 @@ contract Decision {
         attributes_contract = Attributes(attributes_contract_addr);
         
         if (orgSignValidated(_signer_address, _signed_token)) {            
-            string memory sender_pk = attributes_contract.retrievePublicKey(_signer_address,msg.sender);
+            string memory sender_pk = attributes_contract.retrieveProcessorPublicKey(_signer_address,msg.sender);
             if (signatureAndProfessionalVerification(_hashed_token, _attributes, sender_pk)) {                
                 requestAccess(_context_expression, sender_pk, _resource_id, _actions, _attributes);
                 return;
@@ -257,6 +260,19 @@ contract Decision {
 
     function policyCompliant(Policies.Policy memory loaded_policy, uint8 _attrs) public returns(bool){
         if ((bytes1(loaded_policy.policy) & bytes1(_attrs)) == bytes1(loaded_policy.policy)){
+            if(loaded_policy.conventional_access){
+                if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
+                    emit attrsComplyingWithPolicy(loaded_policy, _attrs);
+                    return true;
+                }                
+            }
+
+            if(loaded_policy.emergency_access){
+                if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
+                    emit attrsComplyingWithPolicy(loaded_policy, _attrs);
+                    return true;
+                }                
+            }
             emit attrsComplyingWithPolicy(loaded_policy, _attrs);
             return true;
         }else{
@@ -269,28 +285,25 @@ contract Decision {
 //// ================================================================ ////
 //// ================================================================ ////
 //// ======== Contract containing attributes and contextual =========   //
-//   ======== attributes for emergency and convetional access =======   //
+//   ======== attributes for emergency and conventional access =======   //
 contract Attributes {
     event publicKeyAdded(address _controller_addr, address _processor_addr, string _processor_pk); // Event
     event publicKeyRetrieved( address _controller_addr, address _processor_addr, string _processor_pk); // Event
     event publicKeyDeleted(address _controller_addr, address _processor_addr, string _processor_pk); // Event
     event publicKeyNotFound(address _controller_addr, address _processor_addr);
-    event organisationAddressNotFound(address _controller_addr); // Event
+    event organisationAddressNotFound(address _controller_addr); // Event    
 
-    struct Emergency_Access {
-        uint256 uuid;
-        uint256[] professionals;
-        bool active;        
+    struct Emergency_Access {        
+        address[] professionals;        
     }
 
-    struct Convetional_Access {
-        uint256 uuid;
-        uint256 resource_id;
-        address processor_addr; 
+    struct Conventional_Access {        
+        address processor_addr;
+        uint256 resource_id;        
     }
 
 
-    // Maps address to pubkey
+    // Controllers addresses and processors public keys attribuets mapping
     mapping(address => mapping(address => string)) internal address_pubk;
     mapping(address => bool) internal controllers;
 
@@ -300,25 +313,85 @@ contract Attributes {
         owner = msg.sender;
     }
     
-    // Attributes mapping
+    // Contextual attributes mapping
     mapping(address => Emergency_Access) internal emergency_attributes;
+    mapping(address => Conventional_Access) internal conventional_acess_attributes;
 
 
-    function addExtraInfo() public {
-        //TODO
+    function addContextualAttribute(uint8 _context_expression, address _processor_addr, address _data_subject_addr, uint256 _resource_id, bool _start_emergency, bool _end_emergency) public {
+        if ((_context_expression) == 0){
+            if(_start_emergency){                   
+                emergency_attributes[_data_subject_addr] = Emergency_Access(new address[](5));
+                emergency_attributes[_data_subject_addr].professionals.push(_processor_addr);
+                return;
+            }
+
+            if(_end_emergency){
+                delete emergency_attributes[_data_subject_addr];
+                return;
+            }
+        }
+
+        if ((_context_expression) == 1){
+            conventional_acess_attributes[msg.sender] = Conventional_Access(_processor_addr, _resource_id);
+        }
+        return;
     }
 
-    function changeExtraInfo() public {
-        // TODO
+    function getContextualAttribute(uint8 _context_expression, address _processor_addr, address _data_subject_addr) public view returns(bool){
+        if ((_context_expression) == 0){
+            for (uint i=0; i<emergency_attributes[_data_subject_addr].professionals.length; i++) {
+                if(emergency_attributes[_data_subject_addr].professionals[i] == msg.sender){
+                    return true;
+                }
+            }
+        }
+
+        if ((_context_expression) == 1){
+            if(conventional_acess_attributes[_data_subject_addr].processor_addr == msg.sender){
+                return true;
+            }
+        } 
+
+        return false;
     }
 
-    function deleteExtraInfo(uint256 _emergency_uuid) public {
-        // TODO
-    }    
+    function revokeContextualAttribute(uint8 _context_expression, address _data_subject_addr) public {
+        if ((_context_expression) == 0){
+            for (uint i=0; i<emergency_attributes[_data_subject_addr].professionals.length; i++) {
+                if(emergency_attributes[_data_subject_addr].professionals[i] == msg.sender){
+                    delete emergency_attributes[_data_subject_addr].professionals[i-1];
+                }
+            }
+        }
 
-    function addOrganisation(address _controller_addr) public {
+        if ((_context_expression) == 1){
+            delete conventional_acess_attributes[msg.sender];
+        }
+        return;
+    }
+
+    function addController(address _controller_addr) public {
         require(msg.sender == owner);
         controllers[_controller_addr] = true;
+        return;
+    }
+
+    function deleteController(address _controller_addr) public {
+        require(msg.sender == owner);
+        delete controllers[_controller_addr];
+        return;        
+    }
+
+    function addStorage(address _storage_addr) public {
+        require(msg.sender == owner);
+        controllers[_storage_addr] = true;
+        return;
+    }
+
+    function deleteStorage(address _storage_addr) public {
+        require(msg.sender == owner);
+        delete controllers[_storage_addr];
         return;
     }
 
@@ -329,7 +402,7 @@ contract Attributes {
         return;
     }
 
-    function retrievePublicKey(address _controller_addr, address _processor_addr) public returns (string memory){
+    function retrieveProcessorPublicKey(address _controller_addr, address _processor_addr) public returns (string memory){
         emit publicKeyRetrieved(_controller_addr, _processor_addr, address_pubk[_controller_addr][_processor_addr]);
         return address_pubk[_controller_addr][_processor_addr];
     }
