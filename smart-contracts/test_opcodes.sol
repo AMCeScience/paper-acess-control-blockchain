@@ -14,4 +14,14 @@ contract BitsAndPieces{
         emit printValue(b_bytes);
         emit printValue(a_bytes & b_bytes);        
     }
+
+    function  policyCompliat(uint8[] memory policies, uint8 attributes) public returns(bool){
+        for (uint i=0; i<policies.length; i++) {
+            if ((bytes1(policies[i]) & bytes1(attributes)) == bytes1(policies[i])){
+                return true;
+            }
+        }
+        return false;
+    }
 }
+

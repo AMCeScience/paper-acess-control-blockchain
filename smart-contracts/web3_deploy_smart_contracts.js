@@ -4,7 +4,7 @@ const fs = require("fs");
 const Web3 = require('web3'); 
 
 var web3 = new Web3('http://127.0.0.1:8545'); // your geth
-console.log(web3);
+// console.log(web3);
 
 contracts = {}
 
@@ -91,7 +91,7 @@ function deployContract(contract_name, abi, bin, save=false) {
     .then(function(newContractInstance){
         // console.log("Contract address = ",newContractInstance.options.address);
         contracts[contract_name] = newContractInstance.options.address;
-        console.log(newContractInstance);
+        // console.log(newContractInstance);
         if(save){
             save_json();
         }

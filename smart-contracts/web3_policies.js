@@ -4,7 +4,7 @@ const fs = require("fs");
 const Web3 = require('web3'); 
 
 var web3 = new Web3('http://127.0.0.1:8545'); // your geth
-console.log(web3);
+// console.log(web3);
 
 contracts = {}
 
@@ -33,17 +33,28 @@ async function main(){
 
     policies_transactions = {
         "createPolicy" : [],
-        "queryPolicy" : []
+        "loadPolicy" : [],
+        "retrievePolicy" : [],
+        "changePolicy" : [],
+        "deletePolicy" : []
     }
 
     createPolicy();
 
     await sleep(2000);
 
-    queryPolicy();
+    loadPolicy();
 
     await sleep(2000);
     
+    // changePolicy("");
+
+    await sleep(2000);
+
+    // deletePolicy("");
+
+    await sleep(2000);
+
     save_json();
 }
 
@@ -51,7 +62,7 @@ async function main(){
 // ============================================================== //
 function createPolicy(){
     web3.eth.personal.unlockAccount(owner_account, password, null);
-    PoliciesContract.methods.createPolicy("emergency").send({from: owner_account})
+    PoliciesContract.methods.createPolicy("consent", 2, 1234567890, 7, true, false ).send({from: owner_account})
     .on('transactionHash', function(hash){
         policies_transactions["createPolicy"].push(hash)
     })
@@ -62,17 +73,43 @@ function createPolicy(){
 
 // ============================================================== //
 // ============================================================== //
-function queryPolicy(){
+function loadPolicy(){
     web3.eth.personal.unlockAccount(owner_account, password, null);
-    PoliciesContract.methods.queryPolicy("emergency").send({from: owner_account})
+    PoliciesContract.methods.loadPolicy("consent", 2, 1234567890).send({from: owner_account})
     .on('transactionHash', function(hash){
-        policies_transactions["queryPolicy"].push(hash)
+        policies_transactions["loadPolicy"].push(hash)
+    })
+    .on('receipt', function(receipt){
+        console.log(receipt);
+    })
+}
+// ============================================================== //
+// ============================================================== //
+function retrievePolicy(){
+    return;
+}
+
+function changePolicy(uuid){
+    web3.eth.personal.unlockAccount(owner_account, password, null);
+    PoliciesContract.methods.changePolicy(uuid, 7).send({from: owner_account})
+    .on('transactionHash', function(hash){
+        policies_transactions["changePolicy"].push(hash)
     })
     .on('receipt', function(receipt){
         console.log(receipt);
     })
 }
 
+function changePolicy(){
+    web3.eth.personal.unlockAccount(owner_account, password, null);
+    PoliciesContract.methods.deletePolicy("").send({from: owner_account})
+    .on('transactionHash', function(hash){
+        policies_transactions["deletePolicy"].push(hash)
+    })
+    .on('receipt', function(receipt){
+        console.log(receipt);
+    })
+}
 // ============================================================== //
 // ============================================================== //
 function save_json(){    
