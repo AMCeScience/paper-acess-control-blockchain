@@ -212,11 +212,11 @@ contract Decision {
         (v, r, s) = splitSignature(_signed_token);
         emit numbers(v,r,s);
 
-        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
-        bytes32 _prefixed_hash = keccak256(abi.encodePacked(prefix, _hashed_token));
+        // bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        // bytes32 _prefixed_hash = keccak256(abi.encodePacked(prefix, _hashed_token));
 
         // address _signer_address = ecrecover(_prefixed_hash, v, r, s);
-        attributes_contract = Attributes(attributes_contract_addr);
+        // attributes_contract = Attributes(attributes_contract_addr);
 
         // emit signerAddress(_signer_address);
         

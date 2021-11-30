@@ -28,6 +28,10 @@ data_access_experiments_results = {
     "revokeAccess" : {}
 }
 
+decision_experiments_results = {
+    "startSmartContract" : {}
+}
+
 deployment_experiment_results = {
     "policiesContract" : {},
     "dataAccessContract" : {},
@@ -70,9 +74,19 @@ async function main(){
     // ============================================================== //
     // ============================================================== //
     // Read transactions and get gas | bytes
-    let data_access_transactions_json = fs.readFileSync("data-access-transactions.json");
-    data_access_transactions_json = JSON.parse(data_access_transactions_json);
-    data_access_transactions(data_access_transactions_json) ;
+    // let data_access_transactions_json = fs.readFileSync("data-access-transactions.json");
+    // data_access_transactions_json = JSON.parse(data_access_transactions_json);
+    // data_access_transactions(data_access_transactions_json) ;
+
+    // await sleep(2000);
+    // save_json();
+
+    // ============================================================== //
+    // ============================================================== //
+    // Read transactions and get gas | bytes
+    let decision_transactions_json = fs.readFileSync("decision-transactions.json");
+    decision_transactions_json = JSON.parse(decision_transactions_json);
+    decision_transactions(decision_transactions_json) ;
 
     await sleep(2000);
     save_json();
@@ -223,6 +237,20 @@ function data_access_transactions(transactions){
     });
 
 }
+// ============================================================== //
+// ============================================================== //
+function decision_transactions(transactions){
+    web3.eth.getTransaction(transactions["startSmartContract"][0], function (error, result){
+        decision_experiments_results["startSmartContract"]["tx-size"] = Buffer.byteLength(result.raw, 'utf8');
+    });
+
+    web3.eth.getTransactionReceipt(transactions["startSmartContract"][0], function (error, result){
+        decision_experiments_results["startSmartContract"]["gas-used"] = result.gasUsed;
+        decision_experiments_results["startSmartContract"]["tx-receipt-size"] = Buffer.byteLength(JSON.stringify(result), 'utf8');
+        console.log(result);
+    });
+}
+
 
 // ============================================================== //
 // ============================================================== //
@@ -271,9 +299,9 @@ function deploy_contracts_transactions(contracts){
 }
 
 function save_json(){    
-    var jsonContent = JSON.stringify(data_access_experiments_results);
+    var jsonContent = JSON.stringify(decision_experiments_results);
     // console.log(jsonContent);
-    fs.writeFile("data-access-experiments-results.json", jsonContent, 'utf8', function (err) {
+    fs.writeFile("decision-experiments-results.json", jsonContent, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
