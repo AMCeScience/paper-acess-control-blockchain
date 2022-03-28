@@ -1,0 +1,91 @@
+#### Commands for parity
+parity --chain=ropsten --geth --force-ui --jsonrpc-interface all --jsonrpc-hosts 127.0.0.1 --jsonrpc-cors http://127.0.0.1:8080 --jsonrpc-apis web3,eth,rpc
+
+parity --chain dev --jsonrpc-apis "eth","net","private","parity","personal" --jsonrpc-cors "http://remix.ethereum.org" 
+
+parity --chain chain.json --geth --force-ui --jsonrpc-interface all --jsonrpc-hosts 127.0.0.1 --jsonrpc-cors http://127.0.0.1:8080 --jsonrpc-apis web3,eth,rpc
+
+parity --config dev-insecure --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
+
+curl --data '{"method":"personal_unlockAccount","params":["0x00a329c0648769A73afAc7F9381E08FB43dBEA72","","1"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8545
+{"jsonrpc":"2.0","result":false,"id":1}
+
+curl --data '{"method":"personal_unlockAccount","params":["0x00Bd138aBD70e2F00903268F3Db08f2D25677C9e","user","0x100"],"id":1,"jsonrpc":"2.0"}' -H "Content-Type: application/json" -X POST localhost:8540
+{"jsonrpc":"2.0","result":false,"id":1}
+
+parity --chain chain-spec.json --jsonrpc-apis=personal,net,eth,rpc,private,parity,web3 --jsonrpc-cors "https://remix-alpha.ethereum.org"
+
+parity  --chain chain-spec.json -d /tmp/parity0 --port 30300 --jsonrpc-port 8540 --ws-port 8450 --jsonrpc-apis web3,eth,net,personal,parity,parity_set,traces,rpc,parity_accounts
+
+curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://5ec2f011769b235e4ed360fafb1334e2ac3a34e6927cadc7e2d840a2201f8ee0b13c78d1856b19224e72b6c019a868218d8865ced87550aba94d977501a9e3d7@192.168.0.102:30301"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8540
+
+
+
+###############
+Contract deployment transaction
+
+	status	true Transaction mined and execution succeed
+ 	transaction hash	0x50083089fad24c4657370f41df7599be050f362b35d86fe32c95e7a0b07e0d55 Copy value to clipboard
+ 	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+ 	to	ABAC_Access_Control.(constructor) Copy value to clipboard
+ 	gas	1834605 gas Copy value to clipboard
+ 	transaction cost	1834605 gas Copy value to clipboard
+ 	hash	0x50083089fad24c4657370f41df7599be050f362b35d86fe32c95e7a0b07e0d55 Copy value to clipboard
+ 	input	0x608...70033 Copy value to clipboard
+ 	decoded input	{} Copy value to clipboard
+ 	decoded output	 - Copy value to clipboard
+ 	logs	[] Copy value to clipboard Copy value to clipboard
+ 	value	0 wei 
+
+ Set smart contract address example
+
+	 status	true Transaction mined and execution succeed
+	 transaction hash	0x0992b2394aec486be342b02314d7837a092eb76444e319834823ad974fa90b27 Copy value to clipboard
+	 from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	 to	ABAC_Access_Control.setCloudAccesses(address) 0x3DD0864668C36D27B53a98137764c99F9FD5B7B2 Copy value to clipboard
+	 gas	43490 gas Copy value to clipboard
+	 transaction cost	43490 gas Copy value to clipboard
+	 hash	0x0992b2394aec486be342b02314d7837a092eb76444e319834823ad974fa90b27 Copy value to clipboard
+	 input	0xec4...bbd65 Copy value to clipboard
+	 decoded input	{ "address _address": "0xcd9a70C13C88863ECE51B302a77D2EB98fBBBD65" } Copy value to clipboard
+	 decoded output	 - Copy value to clipboard
+	 logs	[] Copy value to clipboard Copy value to clipboard
+	 value	0 wei 
+
+Creating policy emiting event
+	status	true Transaction mined and execution succeed
+	transaction hash	0xe8190773ea840f2096e60ad3537e28f8d91d89ae890817ab055c9f1e7ba62386 Copy value to clipboard
+	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	to	ABAC_Policies.createPolicy(string,bool[]) 0x385b2E03433C816DeF636278Fb600ecd056B0e8d Copy value to clipboard
+	gas	137202 gas Copy value to clipboard
+	transaction cost	137202 gas Copy value to clipboard
+	hash	0xe8190773ea840f2096e60ad3537e28f8d91d89ae890817ab055c9f1e7ba62386 Copy value to clipboard
+	input	0x1ef...00001 Copy value to clipboard
+	decoded input	{ "string _access_type": "read", "bool[] _attrs": [ true, true, true, true, true, true, true, true ] } Copy value to clipboard
+	decoded output	 - Copy value to clipboard
+	logs	[ { "from": "0x385b2E03433C816DeF636278Fb600ecd056B0e8d", "topic": "0x18a395617e938ed81ce6a92af82a2ff7e83611c5d1b3fa5af237d569fc2f2838", "event": "createdPolicy", "args": { "0": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "1": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ], "hash": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "policy": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ] } } ] Copy value to clipboard Copy value to clipboard
+	value	0 wei 
+
+Quering policy emiting event
+
+	status	true Transaction mined and execution succeed
+	transaction hash	0x71c531672b93b344e8db9863f16615eea6f74797dfe4c7810b686745c42529d5 Copy value to clipboard
+	from	0x00a329c0648769A73afAc7F9381E08FB43dBEA72 Copy value to clipboard
+	to	ABAC_Policies.queryPolicy(string) 0x385b2E03433C816DeF636278Fb600ecd056B0e8d Copy value to clipboard
+	gas	39290 gas Copy value to clipboard
+	transaction cost	39290 gas Copy value to clipboard
+	hash	0x71c531672b93b344e8db9863f16615eea6f74797dfe4c7810b686745c42529d5 Copy value to clipboard
+	input	0x591...00000 Copy value to clipboard
+	decoded input	{ "string _access_type": "read" } Copy value to clipboard
+	decoded output	 - Copy value to clipboard
+	logs	[ { "from": "0x385b2E03433C816DeF636278Fb600ecd056B0e8d", "topic": "0x71b29b49fa76d36a9c92b8a864cbf6dd9c9c57704d110f6de4fd0ac3c7985e3e", "event": "queriedPolicy", "args": { "0": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "1": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ], "hash": "23107188625014341750677375181857731310256199040096497269426145410049943181605", "policy": [ "23107188625014341750677375181857731310256199040096497269426145410049943181605", "read", true, true, true, true, true, true, true, true ] } } ] Copy value to clipboard Copy value to clipboard
+	value	0 wei 
+
+
+
+	####
+	curl --data '{"jsonrpc":"2.0","method":"parity_addReservedPeer","params":["enode://c7834ee763344599984097a4f9b7647a5f9e1a19ad7262e5d5797bf379c8449919a317ff77afff1422e2a66770c511e6dbfbc3c4708f11a43afb5e3ed1713c98@192.168.0.100:30301"],"id":0}' -H "Content-Type: application/json" -X POST localhost:8542
+
+	curl --data '{"jsonrpc":"2.0","method":"personal_sendTransaction","params":[{"from":"0x3819700da297df10776acf566a8eaf6ecf8273f8","to":"0x00e4373ff72ca14d2098ca1854
+	
+	user account - 0x004ec07d2329997267ec62b4166639513386f32e

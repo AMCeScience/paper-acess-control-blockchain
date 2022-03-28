@@ -1,2 +1,2 @@
-# paper-acess-control-blockchain
-code for blockchain paper (access control)
+# Smart Access: Attribute-Based Access Control System based on Smart Contracts
+This repo contains the source code for the Smart Access: Attribute-Based Access Control System based on Smart Contracts and relevant scripts to test & evaluate the implementation.
