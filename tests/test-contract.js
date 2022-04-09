@@ -1,13 +1,13 @@
 // imports and setup
 const assert = require('assert');
-const ganache = require('ganache-cli');
+// const ganache = require('ganache-cli');
 const Web3 = require('web3');
 const fs = require("fs");
-const { mainModule } = require('process');
+// const { mainModule } = require('process');
 var EthUtil = require('ethereumjs-util');
 
 let local_ganache_provider_url = "http://127.0.0.1:7545"
-let quorum_provider_url = "http://localhost:22000"
+let quorum_provider_url = "http://127.0.0.1:22000"
 
 // const web3 = new Web3(local_ganache_provider_url);
 const web3 = new Web3(quorum_provider_url);
@@ -37,9 +37,9 @@ let gaslimit = 3000000
 
 main();
 
-function main(){
+async function main(){
     runSetupTests();
-    runAccessTests()
+    runAccessTests();    
 }
 
 
@@ -80,7 +80,7 @@ function runSetupTests(){
 
     describe('Attributes (PIP) contract', () => {
         it('deploys the Attributes contract', () => {              
-            assert.ok(attributes.options.address);          
+            assert.ok(attributes.options.address);                   
         });
 
         it('adds a controller', async () => {
@@ -131,7 +131,8 @@ function runSetupTests(){
 
     describe('DataAccess (PEP) contract', () => {
         it('deploys the Data Access contract', () => {        
-            assert.ok(data_access.options.address);          
+            assert.ok(data_access.options.address);
+            console.log(data_access.options.address);          
         });        
         it('sets Attributes Contract address', async () => {
             await data_access.methods.setAttributesContractAddr(attributes.options.address).send({
@@ -234,8 +235,9 @@ function runAccessTests(){
             assert(true);
         });
 
-        it('verify access', async () => {                            
-            await data_access.methods.requestAccess(pk, 123456789, "1", 224, new Date.now()).send({
+        it('verify access', async () => {     
+            let timestamp_access = Date.now()                       
+            await data_access.methods.verifyAccess(pk, 123456789, "1", 224, timestamp_access).send({
                 from: accounts[0],
                 gas: gaslimit
             });

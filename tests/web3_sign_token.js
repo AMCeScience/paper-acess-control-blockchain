@@ -1,7 +1,7 @@
 // const Accounts = require('web3-eth-accounts');
 const Web3 = require("web3");
 
-const public_key = "043ca2e15917499a0c7de20f03a17b82a0aab1450dcaa0d704c5d969090bc10a2b1e3e60ef1d17b5201b2c35b124058cb1e034305574dfccdffda9e895a813672b";
+const public_key = "043ab";
 const signerAddress = "";
 const pwd = "";
 const attributes = 255
@@ -13,12 +13,13 @@ var web3 = new Web3('http://127.0.0.1:22000'); // your geth
 // ===================================================================== //
 ///////////////  This section signs a message ( attributes + public key)
 
+console.log(Date.now());
 generateSignedAuthToken(attributes, public_key, signerAddress, pwd)
 // ===================================================================== //
 
 async function generateSignedAuthToken(attributes, public_key, address, password) {
 	accounts = await web3.eth.getAccounts(); 
-	const encoded = web3.eth.abi.encodeParameters(['uint8', 'string'], [attributes, public_key]);
+	const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [attributes, public_key]);
 	const hash = web3.utils.sha3(encoded, { encoding: 'hex' });
 	console.log("Generated hash = ", hash);
 	var signedMessage = await web3.eth.personal.sign(hash, accounts[0], password);
@@ -26,7 +27,6 @@ async function generateSignedAuthToken(attributes, public_key, address, password
 	var recoveredAddress = await web3.eth.personal.ecRecover(hash, signedMessage.toString('hex'))
 	console.log(recoveredAddress);
 
-	console.log("hex = ", web3.utils.asciiToHex(hash))
-	console.log("bytes32 = ", web3.utils.hexToBytes(web3.utils.asciiToHex(hash)).length)
-
+	// console.log("hex = ", web3.utils.asciiToHex(hash))
+	// console.log("bytes32 = ", web3.utils.hexToBytes(web3.utils.asciiToHex(hash)).length)	
 }
