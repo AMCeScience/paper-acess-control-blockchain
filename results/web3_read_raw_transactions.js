@@ -145,10 +145,10 @@ main();
 
 async function main(){
     // Read results transactiosn and get relevant metrics
-    let transaction_results = fs.readFileSync("results-output-request-IBFT-uint256.json");
+    let transaction_results = fs.readFileSync("raw-transactions/results-output-request-RAFT.json");
     transaction_results = JSON.parse(transaction_results);    
     await read(transaction_results);
-    save_json("processed-results/request-IBFT-uint256.json")
+    save_json("processed-results/request-RAFT.json")
     
 }
 
