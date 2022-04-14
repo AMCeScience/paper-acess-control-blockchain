@@ -1,0 +1,109 @@
+status	true Transaction mined and execution succeed
+transaction hash	0x50c845f8ce628abebafb2bd8e6776fdadd0067d6f26baa16297689485f4d8a2c
+from	0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5
+to	DataAccess.requestAccess(string,uint256,uint8,bytes32,bytes,uint8) 0x97e65A424d6eA1C3c96Ea8A5BA74c0355cC1b0B2
+gas	302918 gas
+transaction cost	297374 gas 
+input	0x937...00000
+decoded input	{
+	"string _context_expression": "Conventional access",
+	"uint256 _resource_id": "567750710",
+	"uint8 _actions": 224,
+	"bytes32 _hashed_token": "0x2c592c6c5ed8734fbb8efa5c3ca88cde34ce0060dfe8851c21cb7ed5fe1fa890",
+	"bytes _signed_token": "0x94fc28e4505ae882cb5334797c564b7462c7308ef5acea30b656e1cbbec534d04514ae223c9bfbf5e7ae080dddb9bf551ab34e3843dd9c59b23b9b62b3f455e61b",
+	"uint8 _attributes": 255
+}
+
+
+
+{
+		"from": "0x6B62c203C5EA1695657A999F7c1e7b955DB55edb",
+		"topic": "0x77968593b94a185a7994b0eaa4c12581abb535ed975e3fb29669e6635f068bdd",
+		"event": "validOrganisationSignature",
+		"args": {
+			"0": "0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5",
+			"1": "0x94fc28e4505ae882cb5334797c564b7462c7308ef5acea30b656e1cbbec534d04514ae223c9bfbf5e7ae080dddb9bf551ab34e3843dd9c59b23b9b62b3f455e61b",
+			"_controller_addr": "0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5",
+			"_signed_message": "0x94fc28e4505ae882cb5334797c564b7462c7308ef5acea30b656e1cbbec534d04514ae223c9bfbf5e7ae080dddb9bf551ab34e3843dd9c59b23b9b62b3f455e61b"
+		}
+	},
+
+
+{
+		"from": "0x6B62c203C5EA1695657A999F7c1e7b955DB55edb",
+		"topic": "0xa2d13fdcb4a43341866be8c8351d3087b0944f7fca600f7ce6164a488234b419",
+		"event": "validHashComparison",
+		"args": {
+			"0": 255,
+			"1": "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3",
+			"2": "0x2c592c6c5ed8734fbb8efa5c3ca88cde34ce0060dfe8851c21cb7ed5fe1fa890",
+			"_attributes": 255,
+			"_public_key": "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3",
+			"_hash": "0x2c592c6c5ed8734fbb8efa5c3ca88cde34ce0060dfe8851c21cb7ed5fe1fa890"
+		}
+	},
+	{
+		"from": "0x7fc4C94C3083d23C2C0E4F53f31AF91DF6054Ee7",
+		"topic": "0x7d80c55c3665f0c8df6003db2b291d66d6308abb98e16181c36f5486d06216da",
+		"event": "queriedPolicy",
+		"args": {
+			"0": "5058037062607904377374063198939872233207293789568994791940480087327511430988",
+			"1": [
+				"5058037062607904377374063198939872233207293789568994791940480087327511430988",
+				"Conventional access",
+				255,
+				true,
+				false
+			],
+			"hash": "5058037062607904377374063198939872233207293789568994791940480087327511430988",
+			"policy": [
+				"5058037062607904377374063198939872233207293789568994791940480087327511430988",
+				"Conventional access",
+				255,
+				true,
+				false
+			]
+		}
+	},
+	{
+		"from": "0x6B62c203C5EA1695657A999F7c1e7b955DB55edb",
+		"topic": "0xee0cf871e3384ed1e33430bcf01cbfa7e725c724d23ab9bcdd077f4a8b0c1158",
+		"event": "attrsComplyingWithPolicy",
+		"args": {
+			"0": [
+				"5058037062607904377374063198939872233207293789568994791940480087327511430988",
+				"Conventional access",
+				255,
+				true,
+				false
+			],
+			"1": 255,
+			"_policy": [
+				"5058037062607904377374063198939872233207293789568994791940480087327511430988",
+				"Conventional access",
+				255,
+				true,
+				false
+			],
+			"_attributes": 255
+		}
+	},
+	{
+		"from": "0x97e65A424d6eA1C3c96Ea8A5BA74c0355cC1b0B2",
+		"topic": "0xf1c181d39be554ac7c70a89536c06d03a6178d24bc4073d91909c5cef3064aa1",
+		"event": "accessGranted",
+		"args": {
+			"0": "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3",
+			"1": "Conventional access",
+			"2": 224,
+			"3": "567750710",
+			"4": "1649667438",
+			"5": "1649967438",
+			"_public_key": "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3",
+			"_context_expression": "Conventional access",
+			"_actions": 224,
+			"_resource_id": "567750710",
+			"_access_given_timestamp": "1649667438",
+			"_access_expiration_timestamp": "1649967438"
+		}
+	}

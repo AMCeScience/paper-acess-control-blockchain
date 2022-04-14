@@ -21,6 +21,7 @@ results = {
     0 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -31,6 +32,7 @@ results = {
     1 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -41,6 +43,7 @@ results = {
     2 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -51,6 +54,7 @@ results = {
     3 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -61,6 +65,7 @@ results = {
     4 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -71,6 +76,7 @@ results = {
     5 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -81,6 +87,7 @@ results = {
     6 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -91,6 +98,7 @@ results = {
     7 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -101,6 +109,7 @@ results = {
     8 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -111,6 +120,7 @@ results = {
     9 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -121,6 +131,7 @@ results = {
     10 : {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -131,6 +142,7 @@ results = {
     11: {
         "transactions" : {
             "latencyAvg" : null,
+            "latencyTs" : null,
             "gasUsed" : [],
             "size" : null
         },
@@ -145,10 +157,10 @@ main();
 
 async function main(){
     // Read results transactiosn and get relevant metrics
-    let transaction_results = fs.readFileSync("raw-transactions/results-output-request-RAFT.json");
+    let transaction_results = fs.readFileSync("raw-transactions/results-output-get-IBFT.json");
     transaction_results = JSON.parse(transaction_results);    
     await read(transaction_results);
-    save_json("processed-results/request-RAFT.json")
+    save_json("processed-results/baseline-get-IBFT.json")
     
 }
 
@@ -195,6 +207,7 @@ async function read(transaction_results){
         let tps = 0
         let tmp_block = null
         let latency = 0
+        let latency_ts = 0
         for (const [key, value] of Object.entries(transaction_results[j])) {        
             result = await web3.eth.getTransactionReceipt(key);
             // console.log(result);                  
@@ -209,14 +222,20 @@ async function read(transaction_results){
                 }
             }
             i += 1;
-            latency += result.blockNumber - value["txSentCurrentBlockNumber"]        
+            latency += result.blockNumber - value["txSentCurrentBlockNumber"];
+            latency_ts += block.timestamp - Math.floor(value["txSentTimestamp"]);            
+            // console.log(block.timestamp);
+            // console.log(Math.floor(value["txSentTimestamp"]));
+            // return;
             results[j]["latency"].push((result.blockNumber - value["txSentCurrentBlockNumber"]))
             results[j]["transactions"]["gasUsed"].push(result.gasUsed)
             // results["latency"].append(result.blockNumber - value["txSentCurrentBlockNumber"])
         }
         results[j]["transactions"]["size"] = Buffer.byteLength(JSON.stringify(result), 'utf8')
         results[j]["transactions"]["latencyAvg"] = latency / i
+        results[j]["transactions"]["latencyTs"] = latency_ts / i
         results[j]["tps"] = tps / i
+
     }            
 
 }

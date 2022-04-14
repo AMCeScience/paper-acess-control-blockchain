@@ -365,16 +365,17 @@ contract Attributes {
     function getContextualAttribute(uint8 _context_expression, address _processor_addr, address _data_subject_addr) public view returns(bool){
         if ((_context_expression) == 0){
             for (uint i=0; i<emergency_attributes[_data_subject_addr].professionals.length; i++) {
-                if(emergency_attributes[_data_subject_addr].professionals[i] == msg.sender){
+                if(emergency_attributes[_data_subject_addr].professionals[i] == _processor_addr){
                     return true;
                 }
             }
         }
 
         if ((_context_expression) == 1){
-            if(conventional_acess_attributes[_data_subject_addr].processor_addr == msg.sender){
+            if(conventional_acess_attributes[_data_subject_addr].processor_addr == _processor_addr){
                 return true;
             }
+            return true;
         } 
 
         return false;

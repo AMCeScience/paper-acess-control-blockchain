@@ -1,7 +1,8 @@
 // const Accounts = require('web3-eth-accounts');
 const Web3 = require("web3");
 
-const public_key = "043ab";
+// const public_key = "043ab";
+const public_key = "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3";
 const signerAddress = "";
 const pwd = "";
 const attributes = 255
@@ -19,7 +20,7 @@ generateSignedAuthToken(attributes, public_key, signerAddress, pwd)
 
 async function generateSignedAuthToken(attributes, public_key, address, password) {
 	accounts = await web3.eth.getAccounts(); 
-	const encoded = web3.eth.abi.encodeParameters(['uint256', 'string'], [attributes, public_key]);
+	const encoded = web3.eth.abi.encodeParameters(['uint8', 'string'], [attributes, public_key]);
 	const hash = web3.utils.sha3(encoded, { encoding: 'hex' });
 	console.log("Generated hash = ", hash);
 	var signedMessage = await web3.eth.personal.sign(hash, accounts[0], password);

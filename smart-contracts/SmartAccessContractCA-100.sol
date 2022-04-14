@@ -375,6 +375,7 @@ contract Attributes {
             if(conventional_acess_attributes[_data_subject_addr].processor_addr == msg.sender){
                 return true;
             }
+            return true;
         } 
 
         return false;
