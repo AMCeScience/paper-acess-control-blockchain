@@ -2,7 +2,7 @@
 const Web3 = require("web3");
 
 // const public_key = "043ab";
-const public_key = "7742f83a16bd514c3e7633705a51fea771deeecf5d498d305eb69e2c8bbd3dd3";
+const public_key = "043ab";
 const signerAddress = "";
 const pwd = "";
 const attributes = 255

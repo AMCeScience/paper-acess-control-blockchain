@@ -285,7 +285,7 @@ contract Decision {
         if ((bytes1(loaded_policy.policy) & bytes1(_attrs)) == bytes1(loaded_policy.policy)){
             if(loaded_policy.conventional_access){
                 // 1 Contextual attribute
-                if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
+                if(attributes_contract.getContextualAttribute(1, msg.sender, msg.sender)){
                     emit attrsComplyingWithPolicy(loaded_policy, _attrs);
                     return true;
                 }                

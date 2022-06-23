@@ -157,10 +157,10 @@ main();
 
 async function main(){
     // Read results transactiosn and get relevant metrics
-    let transaction_results = fs.readFileSync("raw-transactions/results-output-get-IBFT.json");
+    let transaction_results = fs.readFileSync("raw-transactions/results-output-request-IBFT-CA-100.json");
     transaction_results = JSON.parse(transaction_results);    
     await read(transaction_results);
-    save_json("processed-results/baseline-get-IBFT.json")
+    save_json("processed-results/request-IBFT-CA-100.json")
     
 }
 
@@ -221,7 +221,7 @@ async function read(transaction_results){
                     "gasUsed" : block.gasUsed,                
                 }
             }
-            i += 1;
+            i += result.blockNumber - value["txSentCurrentBlockNumber"];
             latency += result.blockNumber - value["txSentCurrentBlockNumber"];
             latency_ts += block.timestamp - Math.floor(value["txSentTimestamp"]);            
             // console.log(block.timestamp);
