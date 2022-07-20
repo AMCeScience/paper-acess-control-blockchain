@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib 
 import numpy as np
 import statistics as stats
+import matplotlib.font_manager as font_manager
 
 baseline_get_IBFT = json.load(open("processed-results/baseline-get-IBFT.json"))
 baseline_set_IBFT = json.load(open("processed-results/baseline-set-IBFT.json"))
@@ -148,6 +149,7 @@ for i in range(1,12):
         size_tmp += request_RAFT[i]["blocks"][key]["size"]
         # baseline_get_size_growth.append(size_tmp)
 
+# plt.rc('font',family = 'Courier New',  size=18)
 matplotlib.rc('xtick', labelsize=18) 
 matplotlib.rc('ytick', labelsize=18)
 
@@ -203,12 +205,16 @@ print(stats.mean(verify_IBFT_transactions_per_block))
 print(stats.mean(verify_QBFT_transactions_per_block))
 print(stats.mean(verify_RAFT_transactions_per_block))
 
+font = font_manager.FontProperties(family='Courier New',
+                                   weight='bold',
+                                   style='normal', size=18)
           
 plt.legend(loc="upper right")
 plt.ylim(200, 400)
 # plt.ylabel('Transactions per second  (TPS) - IB')
 # plt.xlabel('Block number')
-plt.xticks([1,2,3,4], ['Baseline GET', 'Baseline SET', 'RequestAccess', 'VerifyAccess'])
+csfont = {'fontname':'Courier New'}
+plt.xticks([1,2,3,4], ['Baseline GET', 'Baseline SET', 'PEPSC\nRequestAccess', 'PEPSC\nVerifyAccess'], **csfont)
 plt.ylabel('Transactions per second  (TPS)', fontsize=18)
 ax.legend([bp1["boxes"][0], bp11["boxes"][0], bp111["boxes"][0]], ["IBFT", "QBFT", "RAFT"], loc='upper right', fontsize=18)
 plt.tight_layout()

@@ -5,7 +5,7 @@ pragma solidity =0.8.7;
 
 //// ================================================================ ////
 //// ================================================================ ////
-//   ==================== Contract for policies =====================   //
+//   =============== Policies Smart Contract (PAPSC) ================   //
 contract Policies {
     // The policies are a combination of attributes
     // The struct contains policies as uint8, however each number represents an array of attributes. 
@@ -128,7 +128,7 @@ contract Policies {
 
 //// ================================================================ ////
 //// ================================================================ ////
-//   ============ Contract for the main access control ==============   //
+//   =============== Decision Smart Contract (PDPSC) ================   //
 contract Decision {
     Policies policies_contract;    
     // Address_PubKey_Mapping addr_pubk_map;
@@ -307,8 +307,7 @@ contract Decision {
 
 //// ================================================================ ////
 //// ================================================================ ////
-//// ======== Contract containing attributes and contextual =========   //
-//   ======== attributes for emergency and conventional access =======   //
+//// ============= Information Smart Contract (PIPSC) ===============   //
 contract Attributes {
     event publicKeyAdded(address _controller_addr, address _processor_addr, string _processor_pk); // Event
     event publicKeyRetrieved( address _controller_addr, address _processor_addr, string _processor_pk); // Event
@@ -462,7 +461,7 @@ contract Attributes {
 
 //// ================================================================ ////
 //// ================================================================ ////
-// Contract for granted accesses and verification by the data storages  //
+//   ============= Enforcement Smart Contract (PEPSC) =============== //
 contract DataAccess {
     
     Decision decision_contract;
