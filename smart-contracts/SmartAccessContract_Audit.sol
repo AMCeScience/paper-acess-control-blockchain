@@ -10,6 +10,10 @@ contract Policies {
     // The policies are a combination of attributes
     // The struct contains policies as uint8, however each number represents an array of attributes. 
     // For example 255 represents [1 1 1 1 1 1 1 1]
+    
+    Attributes attributes_contract;    
+    address attributes_contract_addr;
+
     struct Policy {
         uint256 uuid;
         string context_expression;
@@ -18,10 +22,11 @@ contract Policies {
         // string encrypted_mask; // encrypted_mask = example: {0: "Call centre professional", 1: "Ambulance professional" etc ...}
         bool conventional_access;
         bool emergency_access;
+        // bool public_health_access
     }
 
     // Policies
-    mapping(uint256 => Policy) internal _policies;
+    mapping(uint256 => Policy[]) internal _policies;
 
     address public owner;
 
@@ -29,36 +34,61 @@ contract Policies {
         owner = msg.sender;
     }
 
-    event queriedPolicy(uint256 hash, Policy policy); 
+    event queriedPolicies(uint256 hash, Policy[] policy); 
     event createdPolicy(uint256 hash, Policy policy); 
     event changedPolicy(uint256 hash, Policy policy); 
     event deletedPolicy(uint256 hash, Policy policy); 
     event failedEvent(string description);
 
 
+    function setAttributesContractAddr(address _address) public {
+        require(msg.sender == owner);
+
+        attributes_contract_addr = _address;
+        return;
+    }
+
+    function getAttributesContractAddr() public view returns(address) {
+        return attributes_contract_addr;
+    }
+
     // Creates a hash based on _context_expression to create the policy
-    function hashPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id)
+    function hashPolicy(string memory _context_expression, uint8 _actions)
         public
         pure
         returns (uint256)
     {
         // require(msg.sender == owner);
         bytes32 val;
-        val = sha256(abi.encodePacked(_context_expression, _actions, _resource_id));
+        val = sha256(abi.encodePacked(_context_expression, _actions));
         uint256 i = uint256(val);
         return i;
     }
 
+    // function contains(address sender) public returns(bool){
+    //     attributes_contract = Attributes(attributes_contract_addr);
+    //     address[] memory controllers = attributes_contract.getControllers();
+    //     for (uint i=0; i < controllers.length; i++) {
+    //         if (sender == controllers[i]) {
+    //             return true;
+                
+    //         }
+    //     } return false;
+    // }
+
     // Create a new policy with the number/array-of-attributes
-    function createPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id, uint8 _policy, bool _conventional_access, bool _emergency_access)public{
-    // function createPolicy(string memory _context_expression)public{
-        require(msg.sender == owner);
-        uint256 hash = hashPolicy(_context_expression, _actions, _resource_id);
-        if (getPolicy(hash)) {
-            emit failedEvent("createPolicy: Policy already exists");
-            return;
-        }
-        _policies[hash] = Policy(
+    function createPolicy(string memory _context_expression, uint8 _actions, uint8 _policy, bool _conventional_access, bool _emergency_access) public{        
+        attributes_contract = Attributes(attributes_contract_addr);
+        require(attributes_contract.isAddressAnOrg(msg.sender) || msg.sender == owner);
+
+        uint256 hash = hashPolicy(_context_expression, _actions);
+
+        // if (getPolicy(hash)) {
+        //     emit failedEvent("createPolicy: Policy already exists");
+        //     return;
+        // }
+
+        Policy memory tmp_policy = Policy(
             hash,
             _context_expression,
             _policy,
@@ -67,56 +97,72 @@ contract Policies {
 
         );
 
-        emit createdPolicy(hash, _policies[hash]);
+        _policies[hash].push(tmp_policy);
+
+        emit createdPolicy(hash, tmp_policy);
         return;
-    }
+
+    }    
 
     // Queries the policy that matches the hash
-    function loadPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id)
+    function loadPolicies(string memory _context_expression, uint8 _actions)
         public
-        returns (Policy memory)
+        returns (Policy[] memory)
     {
         // require(msg.sender == owner);
-        uint256 hash = hashPolicy(_context_expression, _actions, _resource_id);
+        uint256 hash = hashPolicy(_context_expression, _actions);
         if (getPolicy(hash)) {
-            emit queriedPolicy(hash, _policies[hash]);
+            emit queriedPolicies(hash, _policies[hash]);
             return _policies[hash];
         }
-        return _policies[hash];
+        emit failedEvent("loadPolicies: Policies for context expression not found");
     }
 
     // Retrieves the policy that matches the uuid
-    function retrievePolicy(uint256 _uuid) public returns (Policy memory) {
-        require(msg.sender == owner);
+    function retrievePolicies(uint256 _uuid) public returns (Policy[] memory) {
+        attributes_contract = Attributes(attributes_contract_addr);
+        require(attributes_contract.isAddressAnOrg(msg.sender) || msg.sender == owner);
+
         if (getPolicy(_uuid)) {
-            emit queriedPolicy(_uuid, _policies[_uuid]);
-            return _policies[_uuid];
-            // NEED TO IMPROVE THIS USE CASE
+            emit queriedPolicies(_uuid, _policies[_uuid]);
+            return _policies[_uuid];            
         }
-        return _policies[_uuid];
+        emit failedEvent("retrievePolicies: Policies for given uuid not found");
     }
 
-    function changePolicy(uint256 _uuid, uint8 _policy) public {
-        require(msg.sender == owner);
-        if (getPolicy(_uuid)) {
-            emit changedPolicy(_uuid, _policies[_uuid]);
-            _policies[_uuid].policy = _policy;      
-            return;
-        }
+    function changePolicy(uint256 _uuid, uint8 _policy, uint i) public {
+        attributes_contract = Attributes(attributes_contract_addr);
+        require(attributes_contract.isAddressAnOrg(msg.sender) || msg.sender == owner);
+
+        // if (getPolicy(_uuid)) {
+        //     emit changedPolicy(_uuid, _policies[_uuid][i]);
+        //     _policies[_uuid][i].policy = _policy;      
+        //     return;
+        // }
+        // emit failedEvent("changePolicy: Policy not found");
+        emit changedPolicy(_uuid, _policies[_uuid][i]);
+        _policies[_uuid][i].policy = _policy;      
         return;
     }
 
-    function deletePolicy(uint256 _uuid) public {
-        require(msg.sender == owner);
-        if (getPolicy(_uuid)) {
-            emit deletedPolicy(_uuid, _policies[_uuid]);
-            delete _policies[_uuid];            
-            return;
-        }
+    function deletePolicy(uint256 _uuid, uint i) public {
+        attributes_contract = Attributes(attributes_contract_addr);
+        require(attributes_contract.isAddressAnOrg(msg.sender) || msg.sender == owner);
+        
+        // if (getPolicy(_uuid)) {
+        //     emit deletedPolicy(_uuid, _policies[_uuid][i]);
+        //     delete _policies[_uuid];
+        //     return;
+        // }
+        // emit failedEvent("deletePolicy: Policy not found for deletion");
+
+        emit deletedPolicy(_uuid, _policies[_uuid][i]);
+        delete _policies[_uuid];
+        return;
     }
 
     function getPolicy(uint256 _uuid) internal view returns (bool) {
-        if (_policies[_uuid].uuid == _uuid) {
+        if (_policies[_uuid].length > 0) {
             return true;
         }
         return false;
@@ -162,17 +208,24 @@ contract Decision {
     event validHashComparison(uint8 _attributes, string _public_key, bytes32 _hash);
     event attrsComplyingWithPolicy(Policies.Policy _policy, uint8 _attributes);
     event attrsNotComplyingWithPolicy(Policies.Policy _policy, uint8 _attributes);
+    event attrsNotComplyingWithAnyPolicy(Policies.Policy[] _policies, uint8 _attributes);
     event addressSetted(address _contract, address _contract_address);
     event signerAddress(address _signerAddress);
     event numbers(uint8 v, bytes32 r, bytes32 s);
     event failedEvent(string _description);
 
     function setPoliciesContractAddr(address _address) public {
+        require(msg.sender == owner);
+
         policies_contract_addr = _address;
+        return;
     }    
 
     function setAttributesContractAddr(address _address) public {
+        require(msg.sender == owner);
+
         attributes_contract_addr = _address;
+        return;
     }
 
     // function setAddressPubKeyMappingAddr(address _address) public {
@@ -180,7 +233,10 @@ contract Decision {
     // }
 
     function setDataAccessContractAddr(address _address) public {
+        require(msg.sender == owner);
+
         data_access_contract_addr = _address;
+        return;
     }
     
     function getAttributesContractAddr() public view returns(address){
@@ -264,8 +320,8 @@ contract Decision {
         return false;
     }
 
-    function verifyPolicy(string memory _context_expression, string memory _public_key, uint256 _resource_id, uint8 _actions, uint8 _attributes) public {
-        Policies.Policy memory loaded_policy = loadPolicy(_context_expression, _actions, _resource_id);
+    function verifyPolicy(string memory _context_expression, string memory _public_key, uint256 _resource_id, uint8 _actions, uint8 _attributes) public {        
+        Policies.Policy[] memory loaded_policy = loadPolicy(_context_expression, _actions);
         if(policyCompliant(loaded_policy, _attributes)){
             data_access_contract = DataAccess(data_access_contract_addr);
             data_access_contract.saveDecision(_public_key, _context_expression, _resource_id, _actions, true);
@@ -275,35 +331,42 @@ contract Decision {
         return;
     }
 
-    function loadPolicy(string memory _context_expression, uint8 _actions, uint256 _resource_id)
+    function loadPolicy(string memory _context_expression, uint8 _actions)
         public
-        returns (Policies.Policy memory)
+        returns (Policies.Policy[] memory)
     {
         policies_contract = Policies(policies_contract_addr);
-        return policies_contract.loadPolicy(_context_expression, _actions, _resource_id);
+        return policies_contract.loadPolicies(_context_expression, _actions);
     }    
 
-    function policyCompliant(Policies.Policy memory loaded_policy, uint8 _attrs) public returns(bool){
-        if ((bytes1(loaded_policy.policy) & bytes1(_attrs)) == bytes1(loaded_policy.policy)){
-            if(loaded_policy.conventional_access){
-                if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
-                    emit attrsComplyingWithPolicy(loaded_policy, _attrs);
-                    return true;
-                }                
-            }
+    function policyCompliant(Policies.Policy[] memory loaded_policies, uint8 _attrs) public returns(bool){
+        for (uint i=0; i<loaded_policies.length; i++) {
+            if ((bytes1(loaded_policies[i].policy) & bytes1(_attrs)) == bytes1(loaded_policies[i].policy)){
+                if(loaded_policies[i].conventional_access){
+                    if(attributes_contract.getContextualAttribute(1, msg.sender, msg.sender)){
+                        emit attrsComplyingWithPolicy(loaded_policies[i], _attrs);
+                        return true;
+                    } else {
+                        emit attrsNotComplyingWithPolicy(loaded_policies[i], _attrs);
+                        return false;                          
+                    }                
+                }
 
-            if(loaded_policy.emergency_access){
-                if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
-                    emit attrsComplyingWithPolicy(loaded_policy, _attrs);
-                    return true;
-                }                
+                if(loaded_policies[i].emergency_access){
+                    if(attributes_contract.getContextualAttribute(0, msg.sender, msg.sender)){
+                        emit attrsComplyingWithPolicy(loaded_policies[i], _attrs);
+                        return true;
+                    } else {
+                        emit attrsNotComplyingWithPolicy(loaded_policies[i], _attrs);
+                        return false;
+                    }
+                }
+                emit attrsComplyingWithPolicy(loaded_policies[i], _attrs);
+                return true;
             }
-            emit attrsComplyingWithPolicy(loaded_policy, _attrs);
-            return true;
-        }else{
-            emit attrsNotComplyingWithPolicy(loaded_policy, _attrs);
-            return false;
-        }                         
+        }
+        emit attrsNotComplyingWithAnyPolicy(loaded_policies, _attrs);
+        return false;
     }    
 }
 
@@ -336,6 +399,7 @@ contract Attributes {
     // Controllers addresses and processors public keys attribuets mapping
     mapping(address => mapping(address => string)) internal address_pubk;
     mapping(address => bool) internal controllers;
+    // address[] controllers_list;
 
     address owner;
 
@@ -403,31 +467,45 @@ contract Attributes {
     }
 
     function addController(address _controller_addr) public {
-        require(msg.sender == owner);
+        require(isAddressAnOrg(msg.sender) || msg.sender == owner);
+        
         controllers[_controller_addr] = true;
+        emit controllerAdded(msg.sender, _controller_addr);
         return;
     }
 
+    // function getControllers() public view returns(address[] memory){        
+    //     return controllers_list;
+    // }
+
     function deleteController(address _controller_addr) public {
-        require(msg.sender == owner);
+        require(isAddressAnOrg(msg.sender) || msg.sender == owner);
+
         delete controllers[_controller_addr];
+        emit controllerDeleted(msg.sender, _controller_addr);
         return;        
     }
 
     function addStorage(address _storage_addr) public {
-        require(msg.sender == owner);
+        require(isAddressAnOrg(msg.sender) || msg.sender == owner);
+
         controllers[_storage_addr] = true;
+        emit storageAdded(msg.sender, _storage_addr);
         return;
     }
 
     function deleteStorage(address _storage_addr) public {
         require(msg.sender == owner);
+
         delete controllers[_storage_addr];
+        emit storageDeleted(msg.sender, _storage_addr);
         return;
     }
 
     function setPublicKey(address _controller_addr, address _processor_addr,string memory _processor_pk) public {
-        // require(isAddressAnOrg((_controller_addr)));
+        require(isAddressAnOrg(msg.sender) || msg.sender == owner);
+        require(isAddressAnOrg((_controller_addr)));
+
         address_pubk[_controller_addr][_processor_addr] = _processor_pk;
         emit publicKeyAdded(_controller_addr, _processor_addr, _processor_pk);
         return;
@@ -438,8 +516,10 @@ contract Attributes {
         return address_pubk[_controller_addr][_processor_addr];
     }
 
-    function deletePublicKey(address _controller_addr , address _processor_addr) public{
-        // require(isAddressAnOrg((_controller_addr)));
+    function deletePublicKey(address _controller_addr , address _processor_addr) public{        
+        require(isAddressAnOrg(msg.sender) || msg.sender == owner);
+        require(isAddressAnOrg((_controller_addr)));
+
         delete address_pubk[_controller_addr][_processor_addr];
         emit publicKeyDeleted(_controller_addr ,_processor_addr, address_pubk[_controller_addr][_processor_addr]);
         return;
@@ -494,7 +574,7 @@ contract DataAccess {
 
     constructor() {
         owner = msg.sender;
-        expiration_time = 300000;
+        expiration_time = 1800;
     }
 
     event accessGranted(string _public_key, string _context_expression, uint8 _actions, uint256 _resource_id, uint256 _access_expiration_timestamp);
@@ -515,24 +595,30 @@ contract DataAccess {
     }
 
     function setDecisionContractAddr(address _address) public {
+        require(msg.sender == owner);
+
         decision_contract_addr = _address;
         return;
     }
     
     function setAttributesContractAddr(address _address) public {
+        require(msg.sender == owner);
+
         attributes_contract_addr = _address;
         return;
     }
 
-    function getDecisionContractAddr() public view returns(address){
+    function getDecisionContractAddr() public view returns(address){        
         return decision_contract_addr;
     }
 
-    function getAttributesContractAddr() public view returns(address){
+    function getAttributesContractAddr() public view returns(address){        
         return attributes_contract_addr;
     }
 
     function setExpirationTime(uint _expiration_time) public{
+        require(msg.sender == owner);
+
         expiration_time = _expiration_time;
         return;
     }
@@ -543,14 +629,15 @@ contract DataAccess {
         return;
     }
 
-    function saveDecision(string memory _public_key, string memory _context_expression, uint256 _resource_id, uint8 _actions, bool success) public {
-        uint256 access_attempt_timestamp = block.timestamp;
-        uint256 access_expiration_timestamp = access_attempt_timestamp + expiration_time;        
-        uint256 i = hashIndex(_context_expression, _resource_id, _actions);
-        accesses[_public_key][i] = Access(_context_expression, _resource_id, _actions, true, access_attempt_timestamp, access_expiration_timestamp);
+    function saveDecision(string memory _public_key, string memory _context_expression, uint256 _resource_id, uint8 _actions, bool success) public {        
         if (success){
+            uint256 access_attempt_timestamp = block.timestamp;
+            uint256 access_expiration_timestamp = access_attempt_timestamp + expiration_time;        
+            uint256 i = hashIndex(_context_expression, _resource_id, _actions);
+            accesses[_public_key][i] = Access(_context_expression, _resource_id, _actions, true, access_attempt_timestamp, access_expiration_timestamp);
             emit accessGranted(_public_key, _context_expression, _actions, _resource_id, access_expiration_timestamp);
         } else {
+            // Add description why was denied
             emit accessDenied(_public_key, _context_expression, _actions, _resource_id);
         }
         
@@ -558,6 +645,9 @@ contract DataAccess {
     }
     
     function verifyAccess(string memory _public_key, uint256 _resource_id, string memory _context_expression, uint8 _actions, uint256 _access_timestamp) public returns (bool) {
+        attributes_contract = Attributes(attributes_contract_addr);
+        require(attributes_contract.isAddressAnOrg(msg.sender));
+
         // uint256 verification_timestamp = block.timestamp;
         if (getGrantedAccess(_public_key, _resource_id, _context_expression, _actions, _access_timestamp)) {
             emit verifyAccessSucess(_public_key, _context_expression, _actions, _resource_id);
