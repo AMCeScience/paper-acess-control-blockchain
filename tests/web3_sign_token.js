@@ -21,9 +21,10 @@ generateSignedAuthToken(attributes, public_key, signerAddress, pwd)
 async function generateSignedAuthToken(attributes, public_key, address, password) {
 	accounts = await web3.eth.getAccounts(); 
 	const encoded = web3.eth.abi.encodeParameters(['uint8', 'string'], [attributes, public_key]);
+	console.log("Encoded = ", encoded)
 	const hash = web3.utils.sha3(encoded, { encoding: 'hex' });
 	console.log("Generated hash = ", hash);
-	var signedMessage = await web3.eth.personal.sign(hash, accounts[0], password);
+	var signedMessage = await web3.eth.personal.sign(hash, accounts[4], password);
 	console.log("Signed message = ", signedMessage.toString('hex'));
 	var recoveredAddress = await web3.eth.personal.ecRecover(hash, signedMessage.toString('hex'))
 	console.log(recoveredAddress);
