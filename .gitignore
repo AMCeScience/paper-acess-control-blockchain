@@ -5,3 +5,5 @@ artifacts/
 bin/
 nodes/
 .vscode
+smart-contracts/TESTS/ACL-smart-contract
+smart-contracts/TESTS/rbac-solidity

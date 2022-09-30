@@ -1,0 +1,28 @@
+Manual steps to test each individual contract and verify if the behavior is as expected
+
+STEP 0: Deploy and set contract addresses
+
+1 - Deploy each smart contract (Decision, Attributes, DataAccess and Policies) and save the addresses of each
+2 - DataAccess: run setAttributesContractAddr and setDecisionContractAddr
+3 - Decision run setAttributesContractAddr, setPoliciesContractAddr and setDataAccessContractAddr
+4 - Policies run setAttributesContractAddr
+
+
+STEP 1: Setup Controllers and processors
+1 - Run addController with input address 0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5
+2 - check isAddressAnOrg with input address 0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5, must return "true"
+3 - Add public key to processor, inputs: _public key: 043ca2e15917499a0c7de20f03a17b82a0aab1450dcaa0d704c5d969090bc10a2b1e3e60ef1d17b5201b2c35b124058cb1e034305574dfccdffda9e895a813672b, _processor_addr: 0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5
+4 - Run retrieveProcessorPublicKey function with inputs: _controller_addr: 0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5, _processor_addr: 0x3A45EE1ED4625bE56074a8722c1bdf7a8B42dfB5
+
+
+STEP 2: Setup policy
+_actions = 1 1 1 | 0 0 0 0 0
+1 - Read 1 - Write 1 - Delete | 0... - Ignore
+_context_expression 0 or 1  
+0 - Emergency Access 1 - Conventional Access
+
+1 - Run createPolicy with inputs: _context_expression: 1, _actions: 224,  _policy: 255, _conventional_access: true, _emergency_access: false
+2 - Run loadPolicy with inputs: _context_expression: 1, _actions: 224
+
+
+STEP 3: Setup policy

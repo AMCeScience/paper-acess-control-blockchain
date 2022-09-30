@@ -1,5 +1,5 @@
 import pandas as pd
-import json
+import json, sys
 import matplotlib.pyplot as plt
 import matplotlib 
 import numpy as np
@@ -27,6 +27,12 @@ request_IBFT_256 = json.load(open("processed-results/request-IBFT-uint256.json")
 request_IBFT_CA_1 = json.load(open("processed-results/request-IBFT-CA-1.json"))
 request_IBFT_CA_10 = json.load(open("processed-results/request-IBFT-CA-10.json"))
 request_IBFT_CA_100 = json.load(open("processed-results/request-IBFT-CA-100.json"))
+
+RBAC_IBFT = json.load(open("processed-results/request-RBAC.json"))
+ACL_IBFT = json.load(open("processed-results/request-ACL.json"))
+
+rbac_ibft_block_size = []
+acl_ibft_block_size = []
 
 baseline_get_IBFT_block_size = []
 baseline_set_IBFT_block_size = []
@@ -81,7 +87,12 @@ for i in range(1,12):
     for key in request_RAFT[i]["blocks"].keys():
         request_RAFT_block_size.append(request_RAFT[i]["blocks"][key]["size"])        
 
-
+for i in range(1,12):
+    i = str(i)
+    for key in RBAC_IBFT[i]["blocks"].keys():
+        rbac_ibft_block_size.append(RBAC_IBFT[i]["blocks"][key]["size"])        
+    for key in ACL_IBFT[i]["blocks"].keys():
+        acl_ibft_block_size.append(ACL_IBFT[i]["blocks"][key]["size"])            
 
 ## Policy length
 
@@ -130,6 +141,9 @@ baseline_set_IBFT_transactions_size = baseline_set_IBFT["1"]["transactions"]["si
 request_IBFT_transactions_size = request_IBFT["1"]["transactions"]["size"]
 verify_IBFT_transactions_size = verify_IBFT["1"]["transactions"]["size"]
 
+print(RBAC_IBFT["1"]["transactions"]["size"])
+print(ACL_IBFT["1"]["transactions"]["size"])
+
 
 matplotlib.rc('xtick', labelsize=18) 
 matplotlib.rc('ytick', labelsize=18)
@@ -166,6 +180,14 @@ matplotlib.rc('ytick', labelsize=18)
 # print(stats.stdev([ x / (1024) for x in verify_QBFT_block_size]))
 # print(stats.mean([ x / (1024) for x in verify_RAFT_block_size]))
 # print(stats.stdev([ x / (1024) for x in verify_RAFT_block_size]))
+
+
+print("\n\RBAC / ACL")
+print(stats.mean([ x / (1024) for x in rbac_ibft_block_size]))
+print(stats.stdev([ x / (1024) for x in rbac_ibft_block_size]))
+print(stats.mean([ x / (1024) for x in acl_ibft_block_size]))
+print(stats.stdev([ x / (1024) for x in acl_ibft_block_size]))
+sys.exit()
 
 ############ plot 2
 # baseline_get_size_growth = np.cumsum([x / (1024) / 1024 for x in baseline_get_IBFT_block_size])

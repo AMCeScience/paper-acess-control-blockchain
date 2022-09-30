@@ -157,10 +157,10 @@ main();
 
 async function main(){
     // Read results transactiosn and get relevant metrics
-    let transaction_results = fs.readFileSync("raw-transactions/results-output-request-IBFT-CA-100.json");
+    let transaction_results = fs.readFileSync("raw-transactions/results-output-ACL.json");
     transaction_results = JSON.parse(transaction_results);    
     await read(transaction_results);
-    save_json("processed-results/request-IBFT-CA-100.json")
+    save_json("processed-results/request-ACL.json")
     
 }
 
@@ -210,6 +210,9 @@ async function read(transaction_results){
         let latency_ts = 0
         for (const [key, value] of Object.entries(transaction_results[j])) {        
             result = await web3.eth.getTransactionReceipt(key);
+            tx = await web3.eth.getTransaction(key)
+            console.log("length of transaction")
+            console.log(Buffer.byteLength(JSON.stringify(tx), 'utf8'))
             // console.log(result);                  
             block = await web3.eth.getBlock(result.blockNumber) 
             if (block != tmp_block){
@@ -221,6 +224,10 @@ async function read(transaction_results){
                     "gasUsed" : block.gasUsed,                
                 }
             }
+            console.log("length of block size")
+            console.log(block.size);
+            console.log("length of transaction hash in block")            
+            console.log(console.log(Buffer.byteLength(JSON.stringify('0x2de1df6c54171c29e1ff8f1233a62a6e9aa386230bfd0130a359ca1c82735787'), 'utf8')))
             i += result.blockNumber - value["txSentCurrentBlockNumber"];
             latency += result.blockNumber - value["txSentCurrentBlockNumber"];
             latency_ts += block.timestamp - Math.floor(value["txSentTimestamp"]);            
@@ -232,11 +239,14 @@ async function read(transaction_results){
             // results["latency"].append(result.blockNumber - value["txSentCurrentBlockNumber"])
         }
         results[j]["transactions"]["size"] = Buffer.byteLength(JSON.stringify(result), 'utf8')
+        console.log("Length of tx receipt")
+        console.log(Buffer.byteLength(JSON.stringify(result), 'utf8'));
         results[j]["transactions"]["latencyAvg"] = latency / i
         results[j]["transactions"]["latencyTs"] = latency_ts / i
         results[j]["tps"] = tps / i
+        break;
 
-    }            
+    }    
 
 }
 
